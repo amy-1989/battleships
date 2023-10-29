@@ -1,32 +1,22 @@
-![CI logo](https://codeinstitute.s3.amazonaws.com/fullstack/ci_logo_small.png)
+# Battleships!
+This is a Python termina based game where the player has to try and locate the computers ships and sink them before the computer finds theirs. 
 
-Welcome,
+## User Experience
 
-This is the Code Institute student template for deploying your third portfolio project, the Python command-line project. The last update to this file was: **March 14, 2023**
+### User Stories
 
-## Reminders
+- First time visitor Goals
 
-- Your code must be placed in the `run.py` file
-- Your dependencies must be placed in the `requirements.txt` file
-- Do not edit any of the other files or your code may not deploy properly
+  - As a first time visitor I want to learn how to play the game.
+  - As a first time visitor I want to navigate easily through the game.
+  - As a first time visitor I want the option to record my score.
+  - As a first time visitor I want to be able to see my score.
+  - As a first time visitor I want the option to begin playing without having to enter a username.
+  - As a first time visitor I want the option to replay the game once finished.
 
-## Creating the Heroku app
+- Returning Visitor Goals
 
-When you create the app, you will need to add two buildpacks from the _Settings_ tab. The ordering is as follows:
+  - As a returning visitor I want to be able to progress to a higher difficulty.
+  - As a returning visitor I want to be able to see my progress/score and compare previous playthroughs.
+  - As a returning visitor I want to be able to bypass instructional sections.
 
-1. `heroku/python`
-2. `heroku/nodejs`
-
-You must then create a _Config Var_ called `PORT`. Set this to `8000`
-
-If you have credentials, such as in the Love Sandwiches project, you must create another _Config Var_ called `CREDS` and paste the JSON into the value field.
-
-Connect your GitHub repository and deploy as normal.
-
-## Constraints
-
-The deployment terminal is set to 80 columns by 24 rows. That means that each line of text needs to be 80 characters or less otherwise it will be wrapped onto a second line.
-
----
-
-Happy coding!
