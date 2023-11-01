@@ -1,5 +1,5 @@
 from random import randint
-
+import sys
 
 def welcome_screen():
     """
@@ -11,6 +11,7 @@ def welcome_screen():
     print('First time player [F]')
     print('Returning player [R]')
     print('How to Play [H]')
+    print('To exit, enter [Q]')
     player_start_screen_choice = input('Please input a letter: ').upper()
     if player_start_screen_choice == 'F':
         print('You have chosen First time player')
@@ -19,6 +20,8 @@ def welcome_screen():
         print('You have chosen Returning player')
     elif player_start_screen_choice == 'H':
         return how_to_play()
+    elif player_start_screen_choice == 'Q':
+        sys.exit()
     else:
         print('Player input is invalid. Please try again')
         player_start_screen_choice = input('Please input a letter: ').upper()
@@ -35,12 +38,15 @@ def how_to_play():
     print('At the end you may save your username and score.')
     print('How many tries will it take you to beat the game?')
     print('To begin, enter [Y], to exit, enter [N]')
+    print('To quit at anytime during the game, input Q')
 
     player_how_to_play_choice = input('Enter your choice here: ').upper()
     if player_how_to_play_choice == 'Y':
         return level_1()
     elif player_how_to_play_choice == 'N':
         return welcome_screen()
+    elif player_how_to_play_choice == 'Q':
+        sys.exit()
     else:
         print('Player input is invalid. Please try again')
         player_how_to_play_choice = input('Enter your choice here: ').upper()
@@ -86,18 +92,23 @@ def level_1():
         to allow the player to input their guess as to 
         where the ships location is and try to sink it
         """    
-        row = input('Please enter a ship row between 1 & 5: ')
-        while row not in '12345':
-            print('Please enter a valid row')
-            row = input('Please enter a ship row between 1 & 5: ')
+        row = input('Please enter a ship row between 1 & 5: ').upper()
+        if row == 'Q':
+            sys.exit()
+        else:
+            while row not in '12345':
+                print('Please enter a valid row')
+                row = input('Please enter a ship row between 1 & 5: ')
     
         column = input('Please enter a ship column between A & E: ').upper()
-        while column not in 'ABCDE':
-            print('Please enter a valid column')
-            column = input('Please enter a ship column between A & E: ').upper()
+        if column == 'Q':
+            sys.exit()
+        else:
+            while column not in 'ABCDE':
+                print('Please enter a valid column')
+                column = input('Please enter a ship column between A & E: ').upper()
         return int(row)-1, letters_to_numbers[column]
-
-
+        
     def create_battleships(board):
         """
         randomly generates positions for the 3 ships on the board
@@ -188,17 +199,22 @@ def level_2():
         to allow the player to input their guess as to 
         where the ships location is and try to sink it
         """    
-        row = input('Please enter a ship row between 1 & 5: ')
-        while row not in '12345678':
-            print('Please enter a valid row')
-            row = input('Please enter a ship row between 1 & 5: ')
+        row = input('Please enter a ship row between 1 & 5: ').upper()
+        if row == 'Q':
+            sys.exit()
+        else:
+            while row not in '12345':
+                print('Please enter a valid row')
+                row = input('Please enter a ship row between 1 & 5: ')
     
         column = input('Please enter a ship column between A & E: ').upper()
-        while column not in 'ABCDEFGH':
-            print('Please enter a valid column')
-            column = input('Please enter a ship column between A & E: ').upper()
+        if column == 'Q':
+            sys.exit()
+        else:
+            while column not in 'ABCDE':
+                print('Please enter a valid column')
+                column = input('Please enter a ship column between A & E: ').upper()
         return int(row)-1, letters_to_numbers[column]
-
 
     def create_battleships(board):
         """
@@ -266,15 +282,21 @@ def level_3():
         to allow the player to input their guess as to 
         where the ships location is and try to sink it
         """    
-        row = input('Please enter a ship row between 1 & 5: ')
-        while row not in '123456789':
-            print('Please enter a valid row')
-            row = input('Please enter a ship row between 1 & 5: ')
+        row = input('Please enter a ship row between 1 & 5: ').upper()
+        if row == 'Q':
+            sys.exit()
+        else:
+            while row not in '12345':
+                print('Please enter a valid row')
+                row = input('Please enter a ship row between 1 & 5: ')
     
         column = input('Please enter a ship column between A & E: ').upper()
-        while column not in 'ABCDEFGHI':
-            print('Please enter a valid column')
-            column = input('Please enter a ship column between A & E: ').upper()
+        if column == 'Q':
+            sys.exit()
+        else:
+            while column not in 'ABCDE':
+                print('Please enter a valid column')
+                column = input('Please enter a ship column between A & E: ').upper()
         return int(row)-1, letters_to_numbers[column]
 
 
