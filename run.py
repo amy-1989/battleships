@@ -1,12 +1,13 @@
 from random import randint
 import sys
+from random_username.generate import generate_username
+
 
 def welcome_screen():
     """
     Displays welcome message to the player and
     home screen
     """
-
     print('Welcome to BattleShips')
     print('First time player [F]')
     print('Returning player [R]')
@@ -53,7 +54,7 @@ def how_to_play():
 
 
 computer_board = []
-player_board = []     
+player_board = []  
 
 letters_to_numbers = {}
 
@@ -106,7 +107,7 @@ def level_1():
         else:
             while column not in 'ABCDE':
                 print('Please enter a valid column')
-                column = input('Please enter a ship column between A & E: ').upper()
+                column = input('Please enter a letter between A & E: ').upper()
         return int(row)-1, letters_to_numbers[column]
         
     def create_battleships(board):
@@ -119,13 +120,12 @@ def level_1():
                 ship_r, ship_cl = randint(0, 4), randint(0, 4)
             computer_board[ship_r][ship_cl] = 'X'
 
-
     def start_game():
         """
         Runs the battleship game
         """
         create_battleships(computer_board)
-        turns = 10
+        turns = 30
         while turns > 0:
             print('Welcome to Battleships')
             create_game_board(player_board)
@@ -150,8 +150,9 @@ def level_1():
                     level_1()
                 else:
                     break
-    
+   
     start_game()
+
 
 def play_level_2():
     print('Continue to the next level? Y/N')
@@ -160,7 +161,16 @@ def play_level_2():
     if next_level == 'Y':
         level_2()
     else:
-        welcome_screen()
+        print('Would you like to save & exit? Y/N')
+        save_progress = input('Please choose Y/N: ').upper()
+        if save_progress == 'Y':
+            save_username = generate_username(1)
+            print(save_username)
+            print('Please remember the above username for replays')
+        else:
+            sys.exit()
+            
+            
 
 
 def play_level_3():
@@ -171,16 +181,15 @@ def play_level_3():
         level_3()
     else:
         welcome_screen()
-            
-
+          
 
 def level_2():
     print('Welcome to Level 2')
     computer_board = [[' ']*8 for x in range(8)]
     player_board = [[' ']*8 for x in range(8)]
 
-    letters_to_numbers = {'A': 0, 'B': 1, 'C': 2, 'D': 3, 'E': 4, 'F': 5, 
-    'G': 6, 'H': 7, }
+    letters_to_numbers = {'A': 0, 'B': 1, 'C': 2, 'D': 3, 'E': 4, 'F': 5,
+                          'G': 6, 'H': 7, }
 
     def create_game_board(board):
         """
@@ -193,27 +202,26 @@ def level_2():
             print('%d|%s|' % (row_num, '|'.join(row)))
             row_num += 1
 
-
     def find_ship_location():
         """
         to allow the player to input their guess as to 
         where the ships location is and try to sink it
         """    
-        row = input('Please enter a ship row between 1 & 5: ').upper()
+        row = input('Please enter a ship row between 1 & 8: ').upper()
         if row == 'Q':
             sys.exit()
         else:
-            while row not in '12345':
+            while row not in '12345678':
                 print('Please enter a valid row')
-                row = input('Please enter a ship row between 1 & 5: ')
+                row = input('Please enter a ship row between 1 & 8: ')
     
-        column = input('Please enter a ship column between A & E: ').upper()
+        column = input('Please enter a letter between A & H: ').upper()
         if column == 'Q':
             sys.exit()
         else:
-            while column not in 'ABCDE':
+            while column not in 'ABCDEFGH':
                 print('Please enter a valid column')
-                column = input('Please enter a ship column between A & E: ').upper()
+                column = input('Please enter a letter between A & H: ').upper()
         return int(row)-1, letters_to_numbers[column]
 
     def create_battleships(board):
@@ -225,7 +233,6 @@ def level_2():
             while board[ship_r][ship_cl] == 'X':
                 ship_r, ship_cl = randint(0, 4), randint(0, 4)
             computer_board[ship_r][ship_cl] = 'X'
-
 
     def start_game():
         """
@@ -262,8 +269,8 @@ def level_3():
     computer_board = [[' ']*9 for x in range(9)]
     player_board = [[' ']*9 for x in range(9)]
 
-    letters_to_numbers = {'A': 0, 'B': 1, 'C': 2, 'D': 3, 'E': 4, 'F': 5, 
-    'G': 6, 'H': 7, 'I': 8, }
+    letters_to_numbers = {'A': 0, 'B': 1, 'C': 2, 'D': 3, 'E': 4, 'F': 5,
+                          'G': 6, 'H': 7, 'I': 8, }
 
     def create_game_board(board):
         """
@@ -276,29 +283,27 @@ def level_3():
             print('%d|%s|' % (row_num, '|'.join(row)))
             row_num += 1
 
-
     def find_ship_location():
         """
         to allow the player to input their guess as to 
         where the ships location is and try to sink it
         """    
-        row = input('Please enter a ship row between 1 & 5: ').upper()
+        row = input('Please enter a ship row between 1 & 9: ').upper()
         if row == 'Q':
             sys.exit()
         else:
-            while row not in '12345':
+            while row not in '123456789':
                 print('Please enter a valid row')
-                row = input('Please enter a ship row between 1 & 5: ')
+                row = input('Please enter a ship row between 1 & 9: ')
     
-        column = input('Please enter a ship column between A & E: ').upper()
+        column = input('Please enter a letter between A & I: ').upper()
         if column == 'Q':
             sys.exit()
         else:
-            while column not in 'ABCDE':
+            while column not in 'ABCDEFGHI':
                 print('Please enter a valid column')
-                column = input('Please enter a ship column between A & E: ').upper()
+                column = input('Please enter a letter between A & I: ').upper()
         return int(row)-1, letters_to_numbers[column]
-
 
     def create_battleships(board):
         """
@@ -309,7 +314,6 @@ def level_3():
             while board[ship_r][ship_cl] == 'X':
                 ship_r, ship_cl = randint(0, 4), randint(0, 4)
             computer_board[ship_r][ship_cl] = 'X'
-
 
     def start_game():
         """
@@ -343,6 +347,5 @@ def level_3():
                 break
     start_game()
 
+
 welcome_screen()
-
-
