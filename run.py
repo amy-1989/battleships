@@ -1,6 +1,19 @@
 from random import randint
 import sys
 from random_username.generate import generate_username
+import gspread
+from google.oauth2.service_account import Credentials
+
+SCOPE = [
+    "https://www.googleapis.com/auth/spreadsheets",
+    "https://www.googleapis.com/auth/drive.file",
+    "https://www.googleapis.com/auth/drive"
+    ]
+
+CREDS = Credentials.from_service_account_file('creds.json')
+SCOPED_CREDS = CREDS.with_scopes(SCOPE)
+GSPREAD_CLIENT = gspread.authorize(SCOPED_CREDS)
+SHEET = GSPREAD_CLIENT.open('battleships_save_data')
 
 
 def welcome_screen():
@@ -125,7 +138,7 @@ def level_1():
         Runs the battleship game
         """
         create_battleships(computer_board)
-        turns = 30
+        turns = 20
         while turns > 0:
             print('Welcome to Battleships')
             create_game_board(player_board)
@@ -168,10 +181,8 @@ def play_level_2():
             print(save_username)
             print('Please remember the above username for replays')
         else:
-            sys.exit()
+            sys.exit()            
             
-            
-
 
 def play_level_3():
     print('Continue to the next level? Y/N')
@@ -180,7 +191,14 @@ def play_level_3():
     if next_level == 'Y':
         level_3()
     else:
-        welcome_screen()
+        print('Would you like to save & exit? Y/N')
+        save_progress = input('Please choose Y/N: ').upper()
+        if save_progress == 'Y':
+            save_username = generate_username(1)
+            print(save_username)
+            print('Please remember the above username for replays')
+        else:
+            sys.exit()
           
 
 def level_2():
@@ -239,7 +257,7 @@ def level_2():
         Runs the battleship game
         """
         create_battleships(computer_board)
-        turns = 10
+        turns = 15
         while turns > 0:
             print('Welcome to Battleships')
             create_game_board(player_board)
