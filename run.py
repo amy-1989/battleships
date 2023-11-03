@@ -32,6 +32,7 @@ def welcome_screen():
         return level_1()
     elif player_start_screen_choice == 'R':
         print('You have chosen Returning player')
+        return returning_player()
     elif player_start_screen_choice == 'H':
         return how_to_play()
     elif player_start_screen_choice == 'Q':
@@ -72,6 +73,13 @@ def returning_player():
     """
     print('Please enter your username. It is case-sensitive')
     player_username = input('Username: ')
+    load_progress = SHEET.worksheet('levels').find(player_username)
+    print(load_progress)
+    if player_username != load_progress:
+        print('Username invalid! Please try again!')
+        player_username = input('Username: ')
+    else: 
+        print('Username found!')
 
 
 computer_board = []
