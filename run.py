@@ -65,6 +65,14 @@ def how_to_play():
         print('Player input is invalid. Please try again')
         player_how_to_play_choice = input('Enter your choice here: ').upper()
 
+def returning_player():
+    """
+    let the user input their username and checks whether
+    it is in the spreadsheet 
+    """
+    print('Please enter your username. It is case-sensitive')
+    player_username = input('Username: ')
+
 
 computer_board = []
 player_board = []  
@@ -138,7 +146,7 @@ def level_1():
         Runs the battleship game
         """
         create_battleships(computer_board)
-        turns = 20
+        turns = 25
         while turns > 0:
             print('Welcome to Battleships')
             create_game_board(player_board)
@@ -167,6 +175,24 @@ def level_1():
     start_game()
 
 
+def save_game():
+    """
+    Generates a random username for the player
+    and adds it to the spreadsheet
+    """
+    save_username = generate_username(1)
+    print(save_username)
+    print('Please remember the above username for replays')
+    levels_worksheet = SHEET.worksheet('levels')
+    levels_worksheet.append_row(save_username)
+    save = input('Press [S] to save & exit: ').upper()
+    if save == 'S':
+        sys.exit()
+    else:
+        print('Invalid input! Please try again!')
+        save = input('When you are ready press [S] to save & exit: ').upper()
+
+
 def play_level_2():
     print('Continue to the next level? Y/N')
     next_level = input('Please choose Y/N: ').upper()
@@ -177,9 +203,7 @@ def play_level_2():
         print('Would you like to save & exit? Y/N')
         save_progress = input('Please choose Y/N: ').upper()
         if save_progress == 'Y':
-            save_username = generate_username(1)
-            print(save_username)
-            print('Please remember the above username for replays')
+            save_game()
         else:
             sys.exit()            
             
@@ -194,9 +218,7 @@ def play_level_3():
         print('Would you like to save & exit? Y/N')
         save_progress = input('Please choose Y/N: ').upper()
         if save_progress == 'Y':
-            save_username = generate_username(1)
-            print(save_username)
-            print('Please remember the above username for replays')
+            save_game()        
         else:
             sys.exit()
           
