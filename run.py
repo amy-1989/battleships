@@ -3,6 +3,7 @@ import sys
 from random_username.generate import generate_username
 import gspread
 from google.oauth2.service_account import Credentials
+import string
 
 SCOPE = [
     "https://www.googleapis.com/auth/spreadsheets",
@@ -29,7 +30,7 @@ def welcome_screen():
     player_start_screen_choice = input('Please input a letter: ').upper()
     if player_start_screen_choice == 'F':
         print('You have chosen First time player')
-        return level_1()
+        return first_time_player()
     elif player_start_screen_choice == 'R':
         print('You have chosen Returning player')
         return returning_player()
@@ -57,19 +58,29 @@ def how_to_play():
 
     player_how_to_play_choice = input('Enter your choice here: ').upper()
     if player_how_to_play_choice == 'Y':
-        return level_1()
-    elif player_how_to_play_choice == 'N':
         return welcome_screen()
+    elif player_how_to_play_choice == 'N':
+        sys.exit()
     elif player_how_to_play_choice == 'Q':
         sys.exit()
     else:
         print('Player input is invalid. Please try again')
         player_how_to_play_choice = input('Enter your choice here: ').upper()
 
+
+def first_time_player():
+    new_username = generate_username(1)
+    print(new_username)
+    print('Please remember the above username for replays')
+    levels_worksheet = SHEET.worksheet('levels')
+    levels_worksheet.append_row(new_username)
+    main()
+
+
 def returning_player():
     """
     let the user input their username and checks whether
-    it is in the spreadsheet 
+    it is in the spreadsheet
     """
     print('Please enter your username. It is case-sensitive')
     player_username = input('Username: ')
@@ -78,14 +89,17 @@ def returning_player():
     if player_username != load_progress:
         print('Username invalid! Please try again!')
         player_username = input('Username: ')
-    else: 
+    else:
         print('Username found!')
+        main()
 
 
-computer_board = []
-player_board = []  
+computer_board = [[' ']*5 for x in range(5)]
+player_board = [[' ']*5 for x in range(5)]
 
-letters_to_numbers = {}
+letters_to_numbers = {'A': 0, 'B': 1, 'C': 2, 'D': 3, 'E': 4, }
+
+result = ""
 
 
 def count_sunk_ships(board):
@@ -100,300 +114,83 @@ def count_sunk_ships(board):
     return count
 
 
-def level_1():
-    computer_board = [[' ']*5 for x in range(5)]
-    player_board = [[' ']*5 for x in range(5)]
-
-    letters_to_numbers = {'A': 0, 'B': 1, 'C': 2, 'D': 3, 'E': 4, }
-
-    def create_game_board(board):
-        """
-        Creates the gameboard for playing the battleships game
-        """
-        print('  A B C D E')
-        print(' -----------')
-        row_num = 1
-        for row in board:
-            print('%d|%s|' % (row_num, '|'.join(row)))
-            row_num += 1
-
-    def find_ship_location():
-        """
-        to allow the player to input their guess as to 
-        where the ships location is and try to sink it
-        """    
-        row = input('Please enter a ship row between 1 & 5: ').upper()
-        if row == 'Q':
-            sys.exit()
-        else:
-            while row not in '12345':
-                print('Please enter a valid row')
-                row = input('Please enter a ship row between 1 & 5: ')
-    
-        column = input('Please enter a ship column between A & E: ').upper()
-        if column == 'Q':
-            sys.exit()
-        else:
-            while column not in 'ABCDE':
-                print('Please enter a valid column')
-                column = input('Please enter a letter between A & E: ').upper()
-        return int(row)-1, letters_to_numbers[column]
-        
-    def create_battleships(board):
-        """
-        randomly generates positions for the 3 ships on the board
-        """
-        for ship in range(3):
-            ship_r, ship_cl = randint(0, 4), randint(0, 4)
-            while computer_board[ship_r][ship_cl] == 'X':
-                ship_r, ship_cl = randint(0, 4), randint(0, 4)
-            computer_board[ship_r][ship_cl] = 'X'
-
-    def start_game():
-        """
-        Runs the battleship game
-        """
-        create_battleships(computer_board)
-        turns = 25
-        while turns > 0:
-            print('Welcome to Battleships')
-            create_game_board(player_board)
-            row, column = find_ship_location()
-            if player_board[row][column] == '-':
-                print('You already guessed that!')
-            elif computer_board[row][column] == 'X':
-                print('Congratulations! You have sunk a battleship')
-                player_board[row][column] = 'X'
-                turns -= 1
-            else:
-                print('Sorry! You missed!')
-                player_board[row][column] = '-'
-                turns -= 1
-            if count_sunk_ships(player_board) == 3:
-                print('You have sunk all the battleships! You have won!')
-                play_level_2()
-            if turns == 0:
-                print('Game Over! You have ran out of turns!')
-                try_again = input('Play again? Y/N: ').upper()
-                if try_again == 'Y':
-                    level_1()
-                else:
-                    break
-   
-    start_game()
-
-
-def save_game():
+def create_game_board(board):
     """
-    Generates a random username for the player
-    and adds it to the spreadsheet
+    Creates the gameboard for playing the battleships game
     """
-    save_username = generate_username(1)
-    print(save_username)
-    print('Please remember the above username for replays')
-    levels_worksheet = SHEET.worksheet('levels')
-    levels_worksheet.append_row(save_username)
-    save = input('Press [S] to save & exit: ').upper()
-    if save == 'S':
+    print('  A B C D E')
+    print(' -----------')
+    row_num = 1
+    for row in board:
+        print('%d|%s|' % (row_num, '|'.join(row)))
+        row_num += 1
+
+
+def find_ship_location():
+    """
+    to allow the player to input their guess as to 
+    where the ships location is and try to sink it
+    """    
+    row = input('Please enter a ship row between 1 & 5: ').upper()
+    if row == 'Q':
         sys.exit()
     else:
-        print('Invalid input! Please try again!')
-        save = input('When you are ready press [S] to save & exit: ').upper()
-
-
-def play_level_2():
-    print('Continue to the next level? Y/N')
-    next_level = input('Please choose Y/N: ').upper()
-
-    if next_level == 'Y':
-        level_2()
+        while row not in '12345':
+            print('Please enter a valid row')
+            row = input('Please enter a ship row between 1 & 5: ')
+    
+    column = input('Please enter a ship column between A & E: ').upper()
+    if column == 'Q':
+        sys.exit()
     else:
-        print('Would you like to save & exit? Y/N')
-        save_progress = input('Please choose Y/N: ').upper()
-        if save_progress == 'Y':
-            save_game()
+        while column not in 'ABCDE':
+            print('Please enter a valid column')
+            column = input('Please enter a letter between A & E: ').upper()
+    return int(row)-1, letters_to_numbers[column]
+       
+
+def create_battleships(board):
+    """
+    randomly generates positions for the 3 ships on the board
+    """
+    for ship in range(3):
+        ship_r, ship_cl = randint(0, 4), randint(0, 4)
+        while computer_board[ship_r][ship_cl] == 'X':
+            ship_r, ship_cl = randint(0, 4), randint(0, 4)
+        computer_board[ship_r][ship_cl] = 'X'
+
+
+def main():
+    """
+    Runs the battleship game
+    """
+    create_battleships(computer_board)
+    turns = 30
+    while turns > 0:
+        print('Welcome to Battleships')
+        create_game_board(player_board)
+        row, column = find_ship_location()
+        if player_board[row][column] == '-':
+            print('You already guessed that!')
+        elif computer_board[row][column] == 'X':
+            print('Congratulations! You have sunk a battleship')
+            player_board[row][column] = 'X'
+            turns -= 1
         else:
-            sys.exit()            
+            print('Sorry! You missed!')
+            player_board[row][column] = '-'
+            turns -= 1
+        if count_sunk_ships(player_board) == 3:
+            print('You have sunk all the battleships! You have won!')
             
-
-def play_level_3():
-    print('Continue to the next level? Y/N')
-    next_level = input('Please choose Y/N: ').upper()
-
-    if next_level == 'Y':
-        level_3()
-    else:
-        print('Would you like to save & exit? Y/N')
-        save_progress = input('Please choose Y/N: ').upper()
-        if save_progress == 'Y':
-            save_game()        
-        else:
-            sys.exit()
-          
-
-def level_2():
-    print('Welcome to Level 2')
-    computer_board = [[' ']*8 for x in range(8)]
-    player_board = [[' ']*8 for x in range(8)]
-
-    letters_to_numbers = {'A': 0, 'B': 1, 'C': 2, 'D': 3, 'E': 4, 'F': 5,
-                          'G': 6, 'H': 7, }
-
-    def create_game_board(board):
-        """
-        Creates the gameboard for playing the battleships game
-        """
-        print('  A B C D E F G H')
-        print(' ----------------')
-        row_num = 1
-        for row in board:
-            print('%d|%s|' % (row_num, '|'.join(row)))
-            row_num += 1
-
-    def find_ship_location():
-        """
-        to allow the player to input their guess as to 
-        where the ships location is and try to sink it
-        """    
-        row = input('Please enter a ship row between 1 & 8: ').upper()
-        if row == 'Q':
-            sys.exit()
-        else:
-            while row not in '12345678':
-                print('Please enter a valid row')
-                row = input('Please enter a ship row between 1 & 8: ')
-    
-        column = input('Please enter a letter between A & H: ').upper()
-        if column == 'Q':
-            sys.exit()
-        else:
-            while column not in 'ABCDEFGH':
-                print('Please enter a valid column')
-                column = input('Please enter a letter between A & H: ').upper()
-        return int(row)-1, letters_to_numbers[column]
-
-    def create_battleships(board):
-        """
-        randomly generates positions for the 3 ships on the board
-        """
-        for ship in range(3):
-            ship_r, ship_cl = randint(0, 4), randint(0, 4)
-            while board[ship_r][ship_cl] == 'X':
-                ship_r, ship_cl = randint(0, 4), randint(0, 4)
-            computer_board[ship_r][ship_cl] = 'X'
-
-    def start_game():
-        """
-        Runs the battleship game
-        """
-        create_battleships(computer_board)
-        turns = 15
-        while turns > 0:
-            print('Welcome to Battleships')
-            create_game_board(player_board)
-            row, column = find_ship_location()
-            if player_board[row][column] == '-':
-                print('You already guessed that!')
-            elif computer_board[row][column] == 'X':
-                print('Congratulations! You have sunk a battleship')
-                player_board[row][column] = 'X'
-                turns -= 1
+        if turns == 0:
+            print('Game Over! You have ran out of turns!')
+            try_again = input('Play again? Y/N: ').upper()
+            if try_again == 'Y':
+                print('restarting game...')
+                main()
             else:
-                print('Sorry! You missed!')
-                player_board[row][column] = '-'
-                turns -= 1
-            if count_sunk_ships(player_board) == 3:
-                print('You have sunk all the battleships! You have won!')
-                play_level_3()
-            if turns == 0:
-                print('Game Over! You have ran out of turns!')
-                break
-
-    start_game()
-
-
-def level_3():
-    print('Welcome to Level 3')
-    computer_board = [[' ']*9 for x in range(9)]
-    player_board = [[' ']*9 for x in range(9)]
-
-    letters_to_numbers = {'A': 0, 'B': 1, 'C': 2, 'D': 3, 'E': 4, 'F': 5,
-                          'G': 6, 'H': 7, 'I': 8, }
-
-    def create_game_board(board):
-        """
-        Creates the gameboard for playing the battleships game
-        """
-        print('  A B C D E F G H I')
-        print(' ------------------')
-        row_num = 1
-        for row in board:
-            print('%d|%s|' % (row_num, '|'.join(row)))
-            row_num += 1
-
-    def find_ship_location():
-        """
-        to allow the player to input their guess as to 
-        where the ships location is and try to sink it
-        """    
-        row = input('Please enter a ship row between 1 & 9: ').upper()
-        if row == 'Q':
-            sys.exit()
-        else:
-            while row not in '123456789':
-                print('Please enter a valid row')
-                row = input('Please enter a ship row between 1 & 9: ')
-    
-        column = input('Please enter a letter between A & I: ').upper()
-        if column == 'Q':
-            sys.exit()
-        else:
-            while column not in 'ABCDEFGHI':
-                print('Please enter a valid column')
-                column = input('Please enter a letter between A & I: ').upper()
-        return int(row)-1, letters_to_numbers[column]
-
-    def create_battleships(board):
-        """
-        randomly generates positions for the 3 ships on the board
-        """
-        for ship in range(3):
-            ship_r, ship_cl = randint(0, 4), randint(0, 4)
-            while board[ship_r][ship_cl] == 'X':
-                ship_r, ship_cl = randint(0, 4), randint(0, 4)
-            computer_board[ship_r][ship_cl] = 'X'
-
-    def start_game():
-        """
-        Runs the battleship game
-        """
-        create_battleships(computer_board)
-        turns = 10
-        while turns > 0:
-            print('Welcome to Battleships')
-            create_game_board(player_board)
-            row, column = find_ship_location()
-            if player_board[row][column] == '-':
-                print('You already guessed that!')
-            elif computer_board[row][column] == 'X':
-                print('Congratulations! You have sunk a battleship')
-                player_board[row][column] = 'X'
-                turns -= 1
-            else:
-                print('Sorry! You missed!')
-                player_board[row][column] = '-'
-                turns -= 1
-            if count_sunk_ships(player_board) == 3:
-                print('You have sunk all the battleships! You have won!')
-                player_input = input('Play again? Y?N: ').upper()
-                if player_input == 'Y':
-                    level_1()
-                else:
-                    break
-            if turns == 0:
-                print('Game Over! You have ran out of turns!')
-                break
-    start_game()
+                sys.exit()
 
 
 welcome_screen()
