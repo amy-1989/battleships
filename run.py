@@ -4,7 +4,7 @@ from random_username.generate import generate_username
 import gspread
 from google.oauth2.service_account import Credentials
 from time import sleep
-
+from colorama import Fore
 
 SCOPE = [
     "https://www.googleapis.com/auth/spreadsheets",
@@ -23,24 +23,20 @@ def welcome_screen():
     Displays welcome message to the player and
     home screen
     """
-    print('Welcome to BattleShips')
-    print('First time player [F]')
-    print('Returning player [R]')
-    print('How to Play [H]')
-    print('To exit, enter [Q]')
-    player_start_screen_choice = input('Please input a letter: ').upper()
+    print(Fore.BLUE + 'Welcome to BattleShips')
+    print(Fore.YELLOW + 'First time player [F]')
+    print(Fore.YELLOW + 'How to Play [H]')
+    print(Fore.RED + 'To exit, enter [Q]')
+    player_start_screen_choice = input(Fore.GREEN + 'Please input a letter: \n').upper()
     if player_start_screen_choice == 'F':
-        print('You have chosen First time player')
+        print(Fore.GREEN + 'You have chosen First time player')
         return first_time_player()
-    elif player_start_screen_choice == 'R':
-        print('You have chosen Returning player')
-        return returning_player()
     elif player_start_screen_choice == 'H':
         return how_to_play()
     elif player_start_screen_choice == 'Q':
         sys.exit()
     else:
-        print('Player input is invalid. Please try again')
+        print(Fore.RED +'Player input is invalid. Please try again')
         player_start_screen_choice = input('Please input a letter: ').upper()
 
 
@@ -55,47 +51,29 @@ def how_to_play():
     print('At the end you may save your username and score.')
     print('How many tries will it take you to beat the game?')
     print('To begin, enter [Y], to exit, enter [N]')
-    print('To quit at anytime during the game, input Q')
+    print('To quit at anytime during the game, input Q \n')
 
-    player_how_to_play_choice = input('Enter your choice here: ').upper()
-    if player_how_to_play_choice == 'Y':
+    player_choice = input(Fore.GREEN + 'Enter your choice here: ').upper()
+    if player_choice == 'Y':
         return welcome_screen()
-    elif player_how_to_play_choice == 'N':
+    elif player_choice == 'N':
         sys.exit()
-    elif player_how_to_play_choice == 'Q':
+    elif player_choice == 'Q':
         sys.exit()
     else:
-        print('Player input is invalid. Please try again')
-        player_how_to_play_choice = input('Enter your choice here: ').upper()
+        print(Fore.RED + 'Player input is invalid. Please try again \n')
+        player_choice = input(Fore.GREEN + 'Enter your choice here: ').upper()
 
 
 def first_time_player():
     player_username = generate_username(1)
     print(player_username)
-    print('Please remember the above username for replays')
+    print(Fore.RED + 'Please remember the above username for replays \n')
     levels_worksheet = SHEET.worksheet('usernames')
     levels_worksheet.append_row(player_username)
     sleep(2)
     main()
-   
 
-def returning_player():
-    """
-    let the user input their username and checks whether
-    it is in the spreadsheet
-    """
-    print('Please enter your username. It is case-sensitive')
-    player_username = input('Username: ')
-    load_progress = SHEET.worksheet('usernames').findall(player_username)
-    print(load_progress)
-    if not load_progress:
-        print('Username invalid! Please try again.')
-        player_username = input('Username: ')
-    else:
-        print('Username found!')
-        sleep(2)
-        main()
-   
 
 computer_board = [[' ']*5 for x in range(5)]
 player_board = [[' ']*5 for x in range(5)]
@@ -119,11 +97,11 @@ def create_game_board(board):
     """
     Creates the gameboard for playing the battleships game
     """
-    print('  A B C D E')
+    print(Fore.YELLOW + '  A B C D E')
     print(' -----------')
     row_num = 1
     for row in board:
-        print('%d|%s|' % (row_num, '|'.join(row)))
+        print(Fore.YELLOW + '%d|%s|' % (row_num, '|'.join(row)))
         row_num += 1
 
 
@@ -176,28 +154,28 @@ def main():
     turns = 30
 
     while turns > 0:
-        print('Welcome to Battleships')
+        print(Fore.BLUE + 'Welcome to Battleships \n')
         create_game_board(player_board)
         row, column = find_ship_location()
         if player_board[row][column] == '-':
-            print('You already guessed that!')
+            print(Fore.YELLOW + 'You already guessed that!')
             sleep(1)
         elif computer_board[row][column] == 'X':
-            print('Congratulations! You have sunk a battleship')
+            print(Fore.GREEN + 'Congratulations! You have sunk a battleship')
             sleep(1)
             player_board[row][column] = 'X'
             turns -= 1
         else:
-            print('Sorry! You missed!')
+            print(Fore.RED + 'Sorry! You missed!')
             sleep(1)
             player_board[row][column] = '-'
             turns -= 1
         if count_sunk_ships(player_board) == 3:
-            print('You have sunk all the battleships! You have won!')
+            print(Fore.GREEN + 'You have sunk all the battleships! You have won!')
             sleep(2)
             sys.exit()
         if turns == 0:
-            print('Game Over! You have ran out of turns!')
+            print(Fore.RED + 'Game Over! You have ran out of turns!')
             sleep(2)
             sys.exit()
 
