@@ -3,7 +3,8 @@ import sys
 from random_username.generate import generate_username
 import gspread
 from google.oauth2.service_account import Credentials
-import string
+from time import sleep
+
 
 SCOPE = [
     "https://www.googleapis.com/auth/spreadsheets",
@@ -69,13 +70,14 @@ def how_to_play():
 
 
 def first_time_player():
-    new_username = generate_username(1)
-    print(new_username)
+    player_username = generate_username(1)
+    print(player_username)
     print('Please remember the above username for replays')
-    levels_worksheet = SHEET.worksheet('levels')
-    levels_worksheet.append_row(new_username)
+    levels_worksheet = SHEET.worksheet('usernames')
+    levels_worksheet.append_row(player_username)
+    sleep(2)
     main()
-
+   
 
 def returning_player():
     """
@@ -84,22 +86,21 @@ def returning_player():
     """
     print('Please enter your username. It is case-sensitive')
     player_username = input('Username: ')
-    load_progress = SHEET.worksheet('levels').find(player_username)
+    load_progress = SHEET.worksheet('usernames').findall(player_username)
     print(load_progress)
-    if player_username != load_progress:
-        print('Username invalid! Please try again!')
+    if not load_progress:
+        print('Username invalid! Please try again.')
         player_username = input('Username: ')
     else:
         print('Username found!')
+        sleep(2)
         main()
-
+   
 
 computer_board = [[' ']*5 for x in range(5)]
 player_board = [[' ']*5 for x in range(5)]
 
 letters_to_numbers = {'A': 0, 'B': 1, 'C': 2, 'D': 3, 'E': 4, }
-
-result = ""
 
 
 def count_sunk_ships(board):
@@ -130,24 +131,31 @@ def find_ship_location():
     """
     to allow the player to input their guess as to 
     where the ships location is and try to sink it
-    """    
+    """
     row = input('Please enter a ship row between 1 & 5: ').upper()
     if row == 'Q':
         sys.exit()
+    elif row == "":
+        print('Please enter a valid row')
+        row = input('Please enter a ship row between 1 & 5: ')
     else:
         while row not in '12345':
             print('Please enter a valid row')
             row = input('Please enter a ship row between 1 & 5: ')
-    
+        
     column = input('Please enter a ship column between A & E: ').upper()
     if column == 'Q':
         sys.exit()
+    elif column == "":
+        print('Please enter a valid column')
+        column = input('Please enter a letter between A & E: ').upper()
     else:
         while column not in 'ABCDE':
             print('Please enter a valid column')
             column = input('Please enter a letter between A & E: ').upper()
+        
     return int(row)-1, letters_to_numbers[column]
-       
+
 
 def create_battleships(board):
     """
@@ -166,31 +174,32 @@ def main():
     """
     create_battleships(computer_board)
     turns = 30
+
     while turns > 0:
         print('Welcome to Battleships')
         create_game_board(player_board)
         row, column = find_ship_location()
         if player_board[row][column] == '-':
             print('You already guessed that!')
+            sleep(1)
         elif computer_board[row][column] == 'X':
             print('Congratulations! You have sunk a battleship')
+            sleep(1)
             player_board[row][column] = 'X'
             turns -= 1
         else:
             print('Sorry! You missed!')
+            sleep(1)
             player_board[row][column] = '-'
             turns -= 1
         if count_sunk_ships(player_board) == 3:
             print('You have sunk all the battleships! You have won!')
-            
+            sleep(2)
+            sys.exit()
         if turns == 0:
             print('Game Over! You have ran out of turns!')
-            try_again = input('Play again? Y/N: ').upper()
-            if try_again == 'Y':
-                print('restarting game...')
-                main()
-            else:
-                sys.exit()
+            sleep(2)
+            sys.exit()
 
 
 welcome_screen()
