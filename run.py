@@ -10,7 +10,7 @@ SCOPE = [
     "https://www.googleapis.com/auth/spreadsheets",
     "https://www.googleapis.com/auth/drive.file",
     "https://www.googleapis.com/auth/drive"
-    ]
+]
 
 CREDS = Credentials.from_service_account_file('creds.json')
 SCOPED_CREDS = CREDS.with_scopes(SCOPE)
@@ -27,17 +27,18 @@ def welcome_screen():
     print(Fore.YELLOW + 'First time player [F]')
     print(Fore.YELLOW + 'How to Play [H]')
     print(Fore.RED + 'To exit, enter [Q]')
-    player_start_screen_choice = input(Fore.GREEN + 'Please input a letter: \n').upper()
-    if player_start_screen_choice == 'F':
+    start_screen_choice = input(
+        Fore.GREEN + 'Please input a letter: \n').upper()
+    if start_screen_choice == 'F':
         print(Fore.GREEN + 'You have chosen First time player')
         return first_time_player()
-    elif player_start_screen_choice == 'H':
+    elif start_screen_choice == 'H':
         return how_to_play()
-    elif player_start_screen_choice == 'Q':
+    elif start_screen_choice == 'Q':
         sys.exit()
     else:
-        print(Fore.RED +'Player input is invalid. Please try again')
-        player_start_screen_choice = input('Please input a letter: ').upper()
+        print(Fore.RED + 'Player input is invalid. Please try again')
+        start_screen_choice = input('Please input a letter: \n').upper()
 
 
 def how_to_play():
@@ -53,7 +54,7 @@ def how_to_play():
     print('To begin, enter [Y], to exit, enter [N]')
     print('To quit at anytime during the game, input Q \n')
 
-    player_choice = input(Fore.GREEN + 'Enter your choice here: ').upper()
+    player_choice = input(Fore.GREEN + 'Enter your choice here: \n').upper()
     if player_choice == 'Y':
         return welcome_screen()
     elif player_choice == 'N':
@@ -62,7 +63,7 @@ def how_to_play():
         sys.exit()
     else:
         print(Fore.RED + 'Player input is invalid. Please try again \n')
-        player_choice = input(Fore.GREEN + 'Enter your choice here: ').upper()
+        player_choice = input(Fore.GREEN + 'Enter your choice here: \n').upper()
 
 
 def first_time_player():
@@ -110,28 +111,28 @@ def find_ship_location():
     to allow the player to input their guess as to 
     where the ships location is and try to sink it
     """
-    row = input('Please enter a ship row between 1 & 5: ').upper()
+    row = input('Please enter a ship row between 1 & 5: \n').upper()
     if row == 'Q':
         sys.exit()
     elif row == "":
         print('Please enter a valid row')
-        row = input('Please enter a ship row between 1 & 5: ')
+        row = input('Please enter a ship row between 1 & 5: \n')
     else:
         while row not in '12345':
             print('Please enter a valid row')
-            row = input('Please enter a ship row between 1 & 5: ')
-        
-    column = input('Please enter a ship column between A & E: ').upper()
+            row = input('Please enter a ship row between 1 & 5: \n')
+
+    column = input('Please enter a ship column between A & E: \n').upper()
     if column == 'Q':
         sys.exit()
     elif column == "":
         print('Please enter a valid column')
-        column = input('Please enter a letter between A & E: ').upper()
+        column = input('Please enter a letter between A & E: \n').upper()
     else:
         while column not in 'ABCDE':
             print('Please enter a valid column')
-            column = input('Please enter a letter between A & E: ').upper()
-        
+            column = input('Please enter a letter between A & E: \n').upper()
+
     return int(row)-1, letters_to_numbers[column]
 
 
@@ -171,7 +172,7 @@ def main():
             player_board[row][column] = '-'
             turns -= 1
         if count_sunk_ships(player_board) == 3:
-            print(Fore.GREEN + 'You have sunk all the battleships! You have won!')
+            print(Fore.GREEN + 'You sunk all the battleships & won!')
             sleep(2)
             sys.exit()
         if turns == 0:
