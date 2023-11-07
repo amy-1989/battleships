@@ -41,7 +41,8 @@ def welcome_screen():
         sys.exit()
     else:
         print(Fore.RED + 'Player input is invalid. Please try again')
-        start_screen_choice = input('Please input a letter: \n').upper()
+        start_screen_choice = input(
+            Fore.GREEN + 'Please input a letter: \n').upper()
 
 
 def how_to_play():
@@ -57,7 +58,7 @@ def how_to_play():
     print('To begin, enter [Y], to exit, enter [N]')
     print('To quit at anytime during the game, input Q \n')
 
-    player_choice = input(Fore.GREEN + 'Enter your choice here: \n').upper()
+    player_choice = input(Fore.GREEN + 'Enter here: \n').upper()
     if player_choice == 'Y':
         return welcome_screen()
     elif player_choice == 'N':
@@ -65,8 +66,8 @@ def how_to_play():
     elif player_choice == 'Q':
         sys.exit()
     else:
-        print(Fore.RED + 'Player input is invalid. Please try again \n')
-        player_choice = input(Fore.GREEN + 'Enter choice here: \n').upper()
+        print(Fore.RED + 'Player input is invalid. Try again \n')
+        player_choice = input(Fore.GREEN + 'Enter here: \n').upper()
 
 
 def first_time_player():
@@ -163,7 +164,7 @@ def start_game():
     the game will continue to loop until a player
     chooses to exit
     """
-    turns = 1
+    turns = 20
     level = 1
 
     play_again = 'Y'
