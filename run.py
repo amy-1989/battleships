@@ -1,3 +1,6 @@
+# game code was inspired by this youtube video
+# from knowledgemavens https://www.youtube.com/watch?v=tF1WRCrd_HQ
+
 from random import randint
 import sys
 from random_username.generate import generate_username
@@ -70,7 +73,7 @@ def first_time_player():
     """
     Generates a username for players at random
     and saves them to a google sheet.
-    Will use this to create a scoreboard as a future feature 
+    Will use this to create a scoreboard as a future feature
     of this game
     """
     player_username = generate_username(1)
@@ -157,7 +160,7 @@ def start_game():
     """
     Runs the battleship game
     Players can choose a difficulty level
-    the game will continue to loop until a player 
+    the game will continue to loop until a player
     chooses to exit
     """
     turns = 1
