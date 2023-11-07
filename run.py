@@ -63,17 +63,23 @@ def how_to_play():
         sys.exit()
     else:
         print(Fore.RED + 'Player input is invalid. Please try again \n')
-        player_choice = input(Fore.GREEN + 'Enter your choice here: \n').upper()
+        player_choice = input(Fore.GREEN + 'Enter choice here: \n').upper()
 
 
 def first_time_player():
+    """
+    Generates a username for players at random
+    and saves them to a google sheet.
+    Will use this to create a scoreboard as a future feature 
+    of this game
+    """
     player_username = generate_username(1)
     print(player_username)
     print(Fore.RED + 'Please remember the above username for replays \n')
     levels_worksheet = SHEET.worksheet('usernames')
     levels_worksheet.append_row(player_username)
     sleep(2)
-    main()
+    start_game()
 
 
 computer_board = [[' ']*5 for x in range(5)]
@@ -108,7 +114,7 @@ def create_game_board(board):
 
 def find_ship_location():
     """
-    to allow the player to input their guess as to 
+    to allow the player to input their guess as to
     where the ships location is and try to sink it
     """
     row = input('Please enter a ship row between 1 & 5: \n').upper()
@@ -147,38 +153,76 @@ def create_battleships(board):
         computer_board[ship_r][ship_cl] = 'X'
 
 
-def main():
+def start_game():
     """
     Runs the battleship game
+    Players can choose a difficulty level
+    the game will continue to loop until a player 
+    chooses to exit
     """
-    create_battleships(computer_board)
-    turns = 30
+    turns = 1
+    level = 1
 
-    while turns > 0:
-        print(Fore.BLUE + 'Welcome to Battleships \n')
-        create_game_board(player_board)
-        row, column = find_ship_location()
-        if player_board[row][column] == '-':
-            print(Fore.YELLOW + 'You already guessed that!')
-            sleep(1)
-        elif computer_board[row][column] == 'X':
-            print(Fore.GREEN + 'Congratulations! You have sunk a battleship')
-            sleep(1)
-            player_board[row][column] = 'X'
-            turns -= 1
+    play_again = 'Y'
+    while play_again.upper() == 'Y':
+        level = input('Please choose a level[1-3]: \n')
+        if level == '1':
+            turns = 20
+        elif level == '2':
+            turns = 15
+        elif level == '3':
+            turns = 10
         else:
-            print(Fore.RED + 'Sorry! You missed!')
-            sleep(1)
-            player_board[row][column] = '-'
-            turns -= 1
-        if count_sunk_ships(player_board) == 3:
-            print(Fore.GREEN + 'You sunk all the battleships & won!')
-            sleep(2)
-            sys.exit()
-        if turns == 0:
-            print(Fore.RED + 'Game Over! You have ran out of turns!')
-            sleep(2)
-            sys.exit()
+            print(Fore.RED + 'Invalid input!')
+            level = input('Please choose a level[1-3]: \n')
+        player_board = [[' ']*5 for x in range(5)]
+        create_battleships(computer_board)
+        while turns > 0:
+            print(Fore.BLUE + 'Welcome to Battleships \n')
+            create_game_board(player_board)
+            row, column = find_ship_location()
+            if player_board[row][column] == '-':
+                print(Fore.YELLOW + 'You already guessed that!')
+                sleep(1)
+            elif computer_board[row][column] == 'X':
+                print(Fore.GREEN + 'Congrats! You have sunk a battleship')
+                sleep(1)
+                player_board[row][column] = 'X'
+                turns -= 1
+            else:
+                print(Fore.RED + 'Sorry! You missed!')
+                sleep(1)
+                player_board[row][column] = '-'
+                turns -= 1
+            if count_sunk_ships(player_board) == 3:
+                print(Fore.GREEN + 'You sunk all the battleships & won!')
+                print(Fore.GREEN + f'You had {turns} turns left')
+                play_again = input(Fore.GREEN + 'Play again? Y/N: \n').upper()
+                if play_again == 'Y':
+                    start_game()
+                elif play_again == 'N':
+                    print(Fore.GREEN + 'Thanks for playing!')
+                    sys.exit()
+                else:
+                    print(Fore.RED + 'Invalid input!')
+                    sleep(2)
+                    play_again = input(
+                        Fore.GREEN + 'Play again? Y/N: \n').upper()
+            if turns == 0:
+                print(Fore.RED + 'Game Over! You have ran out of turns!')
+                play_again = input(Fore.GREEN + 'Play again? Y/N: \n').upper()
+                if play_again == 'Y':
+                    start_game()
+                elif play_again == 'N':
+                    print(Fore.GREEN + 'Thanks for playing!')
+                    sys.exit()
+                else:
+                    print(Fore.RED + 'Invalid input!')
+                    sleep(2)
+                    play_again = input(
+                        Fore.GREEN + 'Play again? Y/N: \n').upper()
+                sleep(2)
+                sys.exit()
 
 
 welcome_screen()
