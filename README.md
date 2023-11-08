@@ -81,6 +81,10 @@ The game has been manually tested at all stages of development.
 
  ![testing](./documents/testing.webp)
 
+ ### Testing User Case Studies
+
+ ![testing](./documents/test_user_cases.webp)
+
 ## Technology
 
 ### Language used
@@ -113,11 +117,46 @@ I solved this by moving the player board variable into the play again while loop
 
 - There is an unresolved bug whereby the last co-ordinate fired upon before the game ends does not print to the gameboard.
 
-- There is an issue with the input error handling in the welcome function and how to play function. After inputting a correct choice following a wrong input the game exits.
+- There was an issue with the input error handling in the welcome function and how to play function. After inputting a correct choice following a wrong input the game exits. This issue was resolved by creating while loops to compliment the if statements already in place.
 
 ## Deployment
 
-## Credits
+After account setup, the steps were as follows:
+
+- Click the "create new app" button on heroku
+- Create a unique name for the app
+- Select region (Europe was selected for this project)
+- Click "create app"
+- Go to settings tab
+- Set config vars using the creds.json file. In the field for key, "CREDS" should be entered and in the field for value, the entire cred.json file content is entered
+- Another key and value need to be added and these are, PORT and 8000, respectively
+- Then click "add buildpack"
+- Use python and nodejs buildpacks
+- The buildpack order should be python on top and nodejs underneath
+- Go to the deploy tab
+- Select the deployment method (github was used for this project)
+- Search for the github repository name (it was twenty_one for this project)
+- Click connect
+- There is an option to use manual deployment or automatic deployment. Make sure main branch is selected
+- After the first deployment you will see a message saying "your app was successfully deployed" and there will be a "view" button to take you to your deployed application
+
+### Forking the repository
+
+- Go to the GitHub repository
+- Click on the Fork button in the upper right-hand corner
+
+### Cloning the repository
+
+- Go to the GitHub repository
+- Click the Code button near the top of the page
+- Select 'HTTPS', 'SSH', or 'Github CLI', depending on how you would like to clone
+- Click the copy button to copy the URL to your clipboard
+- Open Git Bash
+- Change the current working directory to where you want the cloned directory
+- Type git clone and paste the URL ($ git clone https://github.com/YOUR-USERNAME/YOUR-REPOSITORY)
+- Press enter to create your clone locally
+
+## Credits and Acknowledgments
 
 - The game was inspired by https://www.youtube.com/watch?v=tF1WRCrd_HQ
 - I would like to thank my mentor Narender for all his help during this project.
