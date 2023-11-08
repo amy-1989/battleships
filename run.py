@@ -31,18 +31,23 @@ def welcome_screen():
     print(Fore.YELLOW + 'How to Play [H]')
     print(Fore.RED + 'To exit, enter [Q]')
     start_screen_choice = input(
-        Fore.GREEN + 'Please input a letter: \n').upper()
-    if start_screen_choice == 'F':
-        print(Fore.GREEN + 'You have chosen First time player')
-        return first_time_player()
-    elif start_screen_choice == 'H':
-        return how_to_play()
-    elif start_screen_choice == 'Q':
-        sys.exit()
-    else:
+        Fore.GREEN + 'Please input here: \n').upper()
+    if start_screen_choice == "":
         print(Fore.RED + 'Player input is invalid. Please try again')
         start_screen_choice = input(
-            Fore.GREEN + 'Please input a letter: \n').upper()
+            Fore.GREEN + 'Please input here: \n').upper()
+    while start_screen_choice not in 'FHQ':
+        print(Fore.RED + 'Player input is invalid. Please try again')
+        start_screen_choice = input(
+            Fore.GREEN + 'Please input here: \n').upper()    
+    while start_screen_choice in 'FHQ':
+        if start_screen_choice == 'F':
+            print(Fore.GREEN + 'You have chosen First time player')
+            return first_time_player()
+        elif start_screen_choice == 'H':
+            return how_to_play()
+        elif start_screen_choice == 'Q':
+            sys.exit()
 
 
 def how_to_play():
@@ -59,15 +64,19 @@ def how_to_play():
     print('To quit at anytime during the game, input Q \n')
 
     player_choice = input(Fore.GREEN + 'Enter here: \n').upper()
-    if player_choice == 'Y':
-        return welcome_screen()
-    elif player_choice == 'N':
-        sys.exit()
-    elif player_choice == 'Q':
-        sys.exit()
-    else:
+    if player_choice == "":
         print(Fore.RED + 'Player input is invalid. Try again \n')
         player_choice = input(Fore.GREEN + 'Enter here: \n').upper()
+    while player_choice not in 'YNQ':
+        print(Fore.RED + 'Player input is invalid. Try again \n')
+        player_choice = input(Fore.GREEN + 'Enter here: \n').upper()
+    while player_choice in 'YNQ':
+        if player_choice == 'Y':
+            return welcome_screen()
+        elif player_choice == 'N':
+            sys.exit()
+        elif player_choice == 'Q':
+            sys.exit()
 
 
 def first_time_player():
@@ -202,31 +211,37 @@ def start_game():
                 print(Fore.GREEN + 'You sunk all the battleships & won!')
                 print(Fore.GREEN + f'You had {turns} turns left')
                 play_again = input(Fore.GREEN + 'Play again? Y/N: \n').upper()
-                if play_again == 'Y':
-                    start_game()
-                elif play_again == 'N':
-                    print(Fore.GREEN + 'Thanks for playing!')
-                    sys.exit()
-                else:
+                if play_again == "":
                     print(Fore.RED + 'Invalid input!')
-                    sleep(2)
                     play_again = input(
                         Fore.GREEN + 'Play again? Y/N: \n').upper()
+                while play_again not in 'YN':
+                    print(Fore.RED + 'Invalid input!')
+                    play_again = input(
+                        Fore.GREEN + 'Play again? Y/N: \n').upper()
+                while play_again in 'YN':
+                    if play_again == 'Y':
+                        start_game()
+                    elif play_again == 'N':
+                        print(Fore.GREEN + 'Thanks for playing!')
+                        sys.exit()                   
             if turns == 0:
                 print(Fore.RED + 'Game Over! You have ran out of turns!')
                 play_again = input(Fore.GREEN + 'Play again? Y/N: \n').upper()
-                if play_again == 'Y':
-                    start_game()
-                elif play_again == 'N':
-                    print(Fore.GREEN + 'Thanks for playing!')
-                    sys.exit()
-                else:
+                if play_again == "":
                     print(Fore.RED + 'Invalid input!')
-                    sleep(2)
                     play_again = input(
                         Fore.GREEN + 'Play again? Y/N: \n').upper()
-                sleep(2)
-                sys.exit()
+                while play_again not in 'YN':
+                    print(Fore.RED + 'Invalid input!')
+                    play_again = input(
+                        Fore.GREEN + 'Play again? Y/N: \n').upper()
+                while play_again in 'YN':
+                    if play_again == 'Y':
+                        start_game()
+                    elif play_again == 'N':
+                        print(Fore.GREEN + 'Thanks for playing!')
+                        sys.exit()
 
 
 welcome_screen()
